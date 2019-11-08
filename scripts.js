@@ -52,6 +52,7 @@ const text = (() => {
     input.setAttribute('type','text');
     input.setAttribute('value',words);
     input.addEventListener('keydown',commit);
+    input.focus();
     target.removeEventListener('click',edit);
     target.childNodes[0].nodeValue = '';
     target.append(input);
