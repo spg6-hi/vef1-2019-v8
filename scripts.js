@@ -15,10 +15,10 @@ const text = (() => {
     _form.addEventListener('submit', formHandler);
     for(let item of items.querySelectorAll('.item')){
       const checkbox = item.querySelector('.item__checkbox');
-      checkbox.addEventListener('change', finish);
       const button = item.querySelector('.item__button');
-      button.addEventListener('click', deleteItem);
       const text = item.querySelector('.item__text');
+      checkbox.addEventListener('change', finish);
+      button.addEventListener('click', deleteItem);
       text.addEventListener('click', edit);
       console.log(checkbox);
     }
@@ -45,24 +45,42 @@ const text = (() => {
 
   // event handler fyrir það að breyta færslu
   function edit(e) {
+    const {target} = e;
+    const words = target.childNodes[0].nodeValue;
+    const input = document.createElement('input');
+    input.setAttribute('class','form__input');
+    input.setAttribute('type','text');
+    input.setAttribute('value',words);
+    input.addEventListener('keydown',commit);
+    target.removeEventListener('click',edit);
+    target.childNodes[0].nodeValue = '';
+    target.append(input);
   }
 
   // event handler fyrir það að klára að breyta færslu
   function commit(e) {
+    if(event.keyCode == 13){
+      const {target} = e
+      const {parentNode} = target
+      parentNode.childNodes[0].nodeValue = target.value;
+      parentNode.removeChild(target);
+      parentNode.addEventListener('click', edit);
+    }
   }
 
   // fall sem sér um að bæta við nýju item
   function add(value) {
     const li = document.createElement('li');
-    li.setAttribute('class','item');
     const input = document.createElement('input');
+    const span = document.createElement('span');
+    const button = document.createElement('button');
+    li.setAttribute('class','item');
     input.setAttribute('class','item__checkbox');
     input.setAttribute('type','checkbox');
     input.addEventListener('change', finish);
-    const span = document.createElement('span');
     span.setAttribute('class','item__text');
+    span.addEventListener('click', edit);
     span.append(document.createTextNode(value));
-    const button = document.createElement('button');
     button.setAttribute('class','item__button');
     button.append(document.createTextNode('eyða'));
     button.addEventListener('click',deleteItem);
